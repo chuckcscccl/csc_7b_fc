@@ -4,7 +4,7 @@
 //! can compute arithmetic expressions as defined by the **enum [Expr]** AST
 //! type in this module (see source code).  The abstract machine has
 //! the following general purpose registers:
-//!    **ax, bx, cx, dx**.
+//!    **ax, bx, cx**.
 //!
 //! And the following instructions
 //! ```
@@ -16,7 +16,7 @@
 //!    div src dst
 //! ```
 //! In each instruction, the dst (destination) operand must name one of the
-//! four registers, while the src (source) operand can be register or
+//! three registers, while the src (source) operand can be register or
 //! immediate (constant).  The semantics of an ALU instruction such as
 //! `sub ax bx` is `bx -= ax`.  In addition, the div (divide) instruction has
 //! a special semantics: it calculates both the quotient and the remainder.
@@ -25,7 +25,7 @@
 //! is discarded.  For example, if ax contains value 9 and bx contains value 2
 //! then executing `div bx ax` will store 4 in ax and 1 in cx.
 //!
-//! For example, the following program computes 5-3:
+//! The following sample program computes 5-3:
 //! ```
 //!   push 3
 //!   push 5
@@ -36,7 +36,7 @@
 //! ```
 //! The last instruction should always push the result on the stack: this
 //! protocol is essential in order to compute compound expressions such as
-//! 2+3*4, which can be computed with:
+//! 2+3*4, which compiles to:
 //! ```
 //!   push 4
 //!   push 3
@@ -114,7 +114,7 @@ impl Expr {
   }//is_token
 
   /// cloning the entire tree is expensive but a token is shallow and can
-  /// be copied.
+  /// be copied.  Non-token expressions are cloned to `Dummy`.
   pub fn clone_token(&self) -> Self {
     match self {
       Val(n) => Val(*n),
@@ -126,7 +126,10 @@ impl Expr {
 
 }  // method-style implementations
 
-fn proper(e: &Expr) -> bool {
+/// checks if expr is a proper AST expression, and not just a token pre-parsing.
+/// This function is not equivalent to `!.is_token` because `Val(_)` is both a
+/// token and a proper expression.
+pub fn proper(e: &Expr) -> bool {
     match e {
         Sym(_) | EOF | Dummy => false,
         _ => true,

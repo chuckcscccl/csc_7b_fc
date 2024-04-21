@@ -1,0 +1,6 @@
+push 4
+push 3
+pop ax
+pop bx
+mult ax bx
+push bx

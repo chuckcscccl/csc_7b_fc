@@ -83,7 +83,7 @@ use Expr::*;
 /// [Box] is required to define recursive structures.  One drawback of
 /// Rust is that Box blocks nested pattern matching, so sometimes
 /// nested `match` expressions are required.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum Expr {
     Val(i32),                   // i32 is type for 32 bit signed ints
     Plus(Box<Expr>, Box<Expr>), // recursion requires smart pointer
@@ -97,11 +97,34 @@ pub enum Expr {
     Dummy,
 } // Expr enum
 
-impl Default for Expr {
-    fn default() -> Expr {
-        Dummy
-    }
-}
+impl Expr {
+
+  /// alias to [eval] function, but called as a method: `expr1.eval_to()`
+  pub fn eval_to(&self) -> Option<i32> {
+     eval(self)
+  }
+
+  /// determines if expr is a shallow token, produced by the lexical
+  /// tokenizer before parsing.
+  pub fn is_token(&self) -> bool {
+    match self {
+      Val(_) | Sym(_) | EOF | Dummy => true,
+      _ => false,
+    }//match
+  }//is_token
+
+  /// cloning the entire tree is expensive but a token is shallow and can
+  /// be copied.
+  pub fn clone_token(&self) -> Self {
+    match self {
+      Val(n) => Val(*n),
+      Sym(c) => Sym(*c),
+      EOF => EOF,
+      _ => Dummy,    // everything else clones to Dummy
+    }//match
+  }//clone_token
+
+}  // method-style implementations
 
 fn proper(e: &Expr) -> bool {
     match e {
@@ -126,6 +149,14 @@ pub fn eval(e: &Expr) -> Option<i32> {
     } //match
 } //eval
 
+/////////// Trait implementations for Expr
+
+impl Default for Expr {
+    fn default() -> Expr {
+        Dummy
+    }
+}
+
 impl Display for Expr {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result // required by trait
     {
@@ -133,7 +164,7 @@ impl Display for Expr {
             Val(x) => write!(f, "{}", x),
             Plus(x, y) => write!(f, "({}+{})", x, y),
             Times(x, y) => write!(f, "{}*{}", x, y),
-            Minus(x, y) => write!(f, "{}-{}", x, y),
+            Minus(x, y) => write!(f, "({}-{})", x, y),
             Divide(x, y) => write!(f, "{}/{}", x, y),
             Mod(x, y) => write!(f, "{}%{}", x, y),
             Neg(x) => {
@@ -142,7 +173,7 @@ impl Display for Expr {
                 } else {
                     write!(f, "-{}", x)
                 }
-            }
+            },
             Sym(s) => write!(f, " {} ", s),
             EOF => write!(f, " EOF "),
             Dummy => write!(f, " Dummy "),
@@ -283,9 +314,9 @@ pub fn parse(tokens: &Vec<Expr>) -> Option<Expr> {
                 let e = Neg(Box::new(stack.pop().unwrap()));
                 stack[sl - 2] = e; // e moved to stack
             }
-            _ if ti < tokens.len() - 1 => {
+            _ if ti+1 < tokens.len() => {
                 // shift
-                stack.push(lookahead.clone());
+                stack.push(lookahead.clone_token());
                 ti += 1;
                 lookahead = &tokens[ti];
             }

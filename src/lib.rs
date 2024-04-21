@@ -96,14 +96,15 @@
 //!
 //!   5. `cargo run`  : this runs the program
 //!
-//!   6. Got into the folder `csc_7b_fc/vm16/` and read the [README](https://github.com/chuckcscccl/csc_7b_fc/tree/main/vm16).  Compile and test the `vm16` program.  You can then move the vm16 executable into your project's folder so
+//!   6. Go into the folder `csc_7b_fc/vm16/` and read the [README](https://github.com/chuckcscccl/csc_7b_fc/tree/main/vm16).  Compile and test the `vm16` program.  You can then move the vm16 executable into your project's folder so
 //!   it's more accessible.
-//!   Rewrite the `main.rs` in `myfirstcrate/src/`.  I've written a **[skeleton](https://github.com/chuckcscccl/csc_7b_fc/blob/main/src/main.rs)**
+//!
+//!   7. Rewrite the `main.rs` in `myfirstcrate/src/`.  I've written a **[skeleton](https://github.com/chuckcscccl/csc_7b_fc/blob/main/src/main.rs)**
 //!   for you that you can edit/follow.  Make sure this main is in YOUR crate.
 //!   Do not change my crate (`csc_7b_fc`).  Test it by compiling expressions
 //!   such as 3*20-9%2.  Run it on vm16.
 //!   
-//!   7. Submit only the main.rs of your project.
+//!   8. Submit only the main.rs of your project.
 //!
 //!  -----------------
 

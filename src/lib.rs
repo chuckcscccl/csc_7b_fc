@@ -1,6 +1,6 @@
 //!  #   CSC 123/252 Assignment: compiling simple expression trees.
 //!
-//! Abstract Machine *AM16* is a simple instruction set architecture that
+//! Abstract Machine *AM16* is a 16-bit instruction set architecture that
 //! can compute arithmetic expressions as defined by the **enum [Expr]** AST
 //! type in this module (see source code).  The abstract machine has
 //! the following general purpose registers:
@@ -63,10 +63,49 @@
 //! syntax.  For such a leaf, just `println!("push {}",n);`  For a non-leaf
 //! node such as `Plus(a,b)`, you need to recursively compile a and b first
 //! (postorder) then add instructions to calculate the sum, then push the
-//! final result on top of the stack.  I've written a skeleton with the case
+//! final result on top of the stack.  I've written a [skeleton](https://github.com/chuckcscccl/csc_7b_fc/blob/main/src/main.rs) with the case
 //! for `Neg(a)` and you just need to finish the other cases.  
 //!
-//! This part of the assignment is not meant to be difficult.
+//!
+//!  -----------------
+//! This assignment's base program is hosted on **[github](https://github.com/chuckcscccl/csc_7b_fc/)**.  The assignment is designed to be a gentle introduction to Rust
+//! because you're mostly just going to [println]!.  Do the following to
+//! set up a Rust "cargo" project, assuming you've rust already installed.
+//!   1. `git clone https://github.com/chuckcscccl/csc_7b_fc.git`
+//!
+//!      If you don't have git, goto the github link and "get" it manually.
+//!      Periodically, I will update this repository and you will need to
+//!      do a `git pull` inside the folder to upgrade.
+//!
+//!   2. `cargo new myfirstcrate`  
+//!
+//!      This creates a cargo project folder.  Make sure this
+//!      folder is in the same folder as `csc_7b_fc`.  Inside `src/main.rs`
+//!      there's a main that prints hello world.  You will replace this main.
+//!      If you submit a project that prints hello world you will lose
+//!      one million points.
+//!
+//!   3. Go into the `myfirstcrate` folder and edit `Cargo.toml`. Add the following under `[dependencies]`:
+//!      ```
+//!        [dependencies]
+//!        csc_7b_fc = { path = "../csc_7b_fc/" }
+//!      ```
+//!      Change the path if that's not where the base crate is located.
+//!
+//!   4. `cargo build`  : this compiles the program and its dependencies.
+//!
+//!   5. `cargo run`  : this runs the program
+//!
+//!   6. Got into the folder `csc_7b_fc/vm16/` and read the [README](https://github.com/chuckcscccl/csc_7b_fc/tree/main/vm16).  Compile and test the `vm16` program.  You can then move the vm16 executable into your project's folder so
+//!   it's more accessible.
+//!   Rewrite the `main.rs` in `myfirstcrate/src/`.  I've written a **[skeleton](https://github.com/chuckcscccl/csc_7b_fc/blob/main/src/main.rs)**
+//!   for you that you can edit/follow.  Make sure this main is in YOUR crate.
+//!   Do not change my crate (`csc_7b_fc`).  Test it by compiling expressions
+//!   such as 3*20-9%2.  Run it on vm16.
+//!   
+//!   7. Submit only the main.rs of your project.
+//!
+//!  -----------------
 
 #![allow(dead_code)]
 #![allow(non_snake_case)]

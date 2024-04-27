@@ -20,7 +20,8 @@ pub fn compile(e: &Expr) {
     } //match
 } //compile
 
-fn main() {  // compiles the expression given as command-line argument
+fn main() {
+    // compiles the expression given as command-line argument
     let mut input = String::from("0");
     std::env::args().nth(1).map(|s| {
         input = String::from(s);
@@ -31,3 +32,4 @@ fn main() {  // compiles the expression given as command-line argument
         compile(&e);
     });
 } //main
+

@@ -66,6 +66,7 @@
 //! final result on top of the stack.  I've written a [skeleton](https://github.com/chuckcscccl/csc_7b_fc/blob/main/src/main.rs) with the case
 //! for `Neg(a)` and you just need to finish the other cases.  
 //!
+//! <p>
 //!
 //!  -----------------
 //! This assignment's base program is hosted on **[github](https://github.com/chuckcscccl/csc_7b_fc/)**.  The assignment is designed to be a gentle introduction to Rust
@@ -105,6 +106,20 @@
 //!   such as 3*20-9%2.  Run it on vm16.
 //!   
 //!   8. Submit only the main.rs of your project.
+//!   <p>
+//!
+//! There are additional helpful commands you can run with [cargo](https://doc.rust-lang.org/cargo/):
+//!   1. `cargo fmt` : this will format your code to be nicely spaced and
+//!   properly indented.
+//!   2. `cargo doc` : generate documentation from certain types of comments
+//!   written in markdown
+//!   (see source code for example).  Documentation should be provided for
+//!   all `pub` items.  The docs are viewable in `/target/doc/myfirstcrate/index.html`
+//!   3. `cargo clipply` : runs addtional static analysis on your code, provides suggestions such as how to [improve performance](https://nnethercote.github.io/perf-book/linting.html).
+//!  <p>
+//!
+//! What follows is the documentation on the different elements of this crate,
+//! generated from comments.
 //!
 //!  -----------------
 
@@ -138,33 +153,31 @@ pub enum Expr {
 } // Expr enum
 
 impl Expr {
+    /// alias to [eval] function, but called as a method: `expr1.eval_to()`
+    pub fn eval_to(&self) -> Option<i32> {
+        eval(self)
+    }
 
-  /// alias to [eval] function, but called as a method: `expr1.eval_to()`
-  pub fn eval_to(&self) -> Option<i32> {
-     eval(self)
-  }
+    /// determines if expr is a shallow token, produced by the lexical
+    /// tokenizer before parsing.
+    pub fn is_token(&self) -> bool {
+        match self {
+            Val(_) | Sym(_) | EOF | Dummy => true,
+            _ => false,
+        } //match
+    } //is_token
 
-  /// determines if expr is a shallow token, produced by the lexical
-  /// tokenizer before parsing.
-  pub fn is_token(&self) -> bool {
-    match self {
-      Val(_) | Sym(_) | EOF | Dummy => true,
-      _ => false,
-    }//match
-  }//is_token
-
-  /// cloning the entire tree is expensive but a token is shallow and can
-  /// be copied.  Non-token expressions are cloned to `Dummy`.
-  pub fn clone_token(&self) -> Self {
-    match self {
-      Val(n) => Val(*n),
-      Sym(c) => Sym(*c),
-      EOF => EOF,
-      _ => Dummy,    // everything else clones to Dummy
-    }//match
-  }//clone_token
-
-}  // method-style implementations
+    /// cloning the entire tree is expensive but a token is shallow and can
+    /// be copied.  Non-token expressions are cloned to `Dummy`.
+    pub fn clone_token(&self) -> Self {
+        match self {
+            Val(n) => Val(*n),
+            Sym(c) => Sym(*c),
+            EOF => EOF,
+            _ => Dummy, // everything else clones to Dummy
+        } //match
+    } //clone_token
+} // method-style implementations
 
 /// checks if expr is a proper AST expression, and not just a token pre-parsing.
 /// This function is not equivalent to `!.is_token` because `Val(_)` is both a
@@ -216,7 +229,7 @@ impl Display for Expr {
                 } else {
                     write!(f, "-{}", x)
                 }
-            },
+            }
             Sym(s) => write!(f, " {} ", s),
             EOF => write!(f, " EOF "),
             Dummy => write!(f, " Dummy "),
@@ -357,7 +370,7 @@ pub fn parse(tokens: &Vec<Expr>) -> Option<Expr> {
                 let e = Neg(Box::new(stack.pop().unwrap()));
                 stack[sl - 2] = e; // e moved to stack
             }
-            _ if ti+1 < tokens.len() => {
+            _ if ti + 1 < tokens.len() => {
                 // shift
                 stack.push(lookahead.clone_token());
                 ti += 1;
@@ -374,3 +387,8 @@ pub fn parse(tokens: &Vec<Expr>) -> Option<Expr> {
     } // while
     return stack.pop();
 } //parse
+
+
+///////////// bijective map
+
+pub mod bijectivemap;

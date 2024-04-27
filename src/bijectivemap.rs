@@ -1,22 +1,35 @@
 //! Skeleton module for the bijective hashmap assignment.
 //!
 //! Be sure to read the assignment description in the 
-//! **[C++ version](https://cs.hofstra.edu/~cscccl/csc123/csc_7b_fc/target/doc/src/csc_7b_fc/bijectivemap.cpp.html)** of this 
+//! **[C++ version](https://github.com/chuckcscccl/csc_7b_fc/blob/main/src/bijectivemap.cpp)** of this 
 //! program that you're supposed to emulate.
 //! 
-//! Working skeleton for the bijective hashmap assignment.
+//! This module currently compiles and provides you with some helpful code,
+//! but it contains some dummy implementations that you must implement.
+//! properly (see documentation for each [BijectiveMap] method).
 //! Place the following in the main.rs of your crate.
-//! 
-//! mod bijectivemap;
-//! use bijectivemap::*;
-//! 
-
+//! ```
+//!    mod bijectivemap;
+//!    use bijectivemap::*;
+//! ```
+//!
+//! When you have completed the implementation, emulate the main in the
+//! C++ program to test it.  It can begin with ...
+//!```
+//!    let mut daynum:BijectiveMap<&'static str,u8> = BijectiveMap::new();
+//!    let days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+//!    for i in 0..days.len() { daynum.set(days[i],(i+1) as u8); }
+//!    daynum.get_by_key(&"Wednesday").map(|d|{
+//!      println!("Wednesday is day {}",d);
+//!    });
+//!```
+//!
 #![allow(unused_mut)]
 use std::collections::{HashMap, hash_map::RandomState};
 use std::hash::{BuildHasher, Hash, Hasher};
 
 ///The `HashStealer` struct and methods allows you to "steal" the hash functions 
-///from rust, and base_hash can be called on any key that implements Hash+Eq.
+///from Rust, and base_hash can be called on any key that implements Hash+Eq.
 ///Hashing requires equality and must be consistent with it: if x==y then
 ///hash(x)==hash(y).
 

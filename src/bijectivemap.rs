@@ -5,12 +5,16 @@
 //! program that you're supposed to emulate.
 //! 
 //! This module currently compiles and provides you with some helpful code,
-//! but it contains some dummy implementations that you must implement.
-//! properly (see documentation for each [BijectiveMap] method).
+//! but there are four methods that you must implement properly
+//! (see documentation for each [BijectiveMap] method).
+//!
+//! Go into the `csc_7b_fc` crate and `git pull` the latest updates.  Then
+//! `cargo new` a fresh crate for your assignment and add the `path` to
+//! `csc_7b_fc` to Cargo.toml as you did for the first Rust assignment.
+//! 
 //! Place the following in the main.rs of your crate.
 //! ```
-//!    mod bijectivemap;
-//!    use bijectivemap::*;
+//!    use csc_7b_fc::bijectivemap::*;
 //! ```
 //!
 //! When you have completed the implementation, emulate the main in the
@@ -95,8 +99,9 @@ impl<KT:Hash+Eq, VT:Hash+Eq, const CAP:usize> BijectiveMap<KT,VT,CAP> {
 
 } // impl
 
-/// place all your code in another impl block, with the following functions
-/// fully implemented
+/// **Place all your code in another impl block, and fully implement the
+/// methods [BijectiveMap::get_by_val], [BijectiveMap::take_by_key],
+/// [BijectiveMap::take_by_val], and [BijectiveMap::set].**
 impl<KT:Hash+Eq, VT:Hash+Eq, const CAP:usize> BijectiveMap<KT,VT,CAP> {
 
    /// Returns number of key-value pairs in this map.
@@ -104,12 +109,14 @@ impl<KT:Hash+Eq, VT:Hash+Eq, const CAP:usize> BijectiveMap<KT,VT,CAP> {
    /// away more stuff if you come to me for help ...
    pub fn len(&self) -> usize { self.size } 
 
+   /// **This is the first method you need to implement.**
    /// Returns an immutable reference to the key associated with the
    /// given value, if it exists. The dummy provided here just returns
    /// `None` and you need to rewrite it appropriately.
    pub fn get_by_val(&mut self, val:&VT) -> Option<&KT> 
    { None }
 
+  /// This is another method you need to implement.
   /// Removes key-value pair from map by searching for it by key.
   /// Returns the key and value if found.  Note that this function
   /// is "take" and not "get" because it **moves** the actual key and value
@@ -129,8 +136,7 @@ impl<KT:Hash+Eq, VT:Hash+Eq, const CAP:usize> BijectiveMap<KT,VT,CAP> {
   /// that was deleted.  Note that the returned key,value, if they 
   /// exist, may indicate a different key or value that existed in the
   /// map before the change (see "daynum" example that you should
-  /// replicate in main).  And don't just be a dummy like the current
-  /// state of this implementation.
+  /// replicate in main).  Replace the dummy implementation.
   pub fn set(&mut self, mut key:KT, mut val:VT) -> Option<(KT,VT)>
   { None }
 

@@ -390,5 +390,7 @@ pub fn parse(tokens: &Vec<Expr>) -> Option<Expr> {
 
 
 ///////////// bijective map
-
 pub mod bijectivemap;
+
+///////////// circular queue 
+pub mod circularqueue;

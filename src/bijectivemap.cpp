@@ -23,19 +23,18 @@ underneath, one in each direction: HashMap<KT,VT> and HashMap<VT,KT> where
 KT, VT are the types of keys and values.  But this requires either cloning
 the keys and values, or have multiple pointers to the same keys/values.
 
-Most implementations of this data structure that you would find in Rust
-would also assume that that KT, VT implement the Clone trait, or 
-use Rc (reference counter) to have multiple pointers.  But cloning is
-clearly inefficient and Rc can potentially compromise the safety of Rust.
-Rc also incurs greater runtime overhead than unique pointers.
+Most implementations of this data structure that you would find in
+Rust would also assume that KT and VT implement the Clone trait, or
+use Rc (reference counter) to have multiple pointers to the same
+objects.  But cloning is clearly inefficient and Rc can potentially
+compromise the safety of Rust.
 
 My implementation below in C++ does not require cloning (but also
 can't prevent it since C++ doesn't distinguish cloning from copying).
 You are to write an equivalent version in Rust that does not require
 Clone or Rc (or Arc).  
 
-YOU MUST CONVERT THIS PROGRAM! YOUR RUST PROGRAM MUST RESEMBLE THIS
-PROGRAM AS MUCH AS REASONABLY POSSIBLE.
+YOU MUST COMPLETE THE RUST VERSION OF THIS PROGRAM AS INSTRUCTED.
 
 I've tried to use the latest features of C++ to make this program
 resemble Rust - you can't compile this program without the newest C++
@@ -118,14 +117,13 @@ template<
   typename HK = std::hash<KT>,  /* hasher for keys */
   typename HV = std::hash<VT>   /* hasher for values */
   >
-/*
   requires std::equality_comparable<KT>
         && std::equality_comparable<VT>
         && std::movable<KT>
         && std::movable<VT>
         && std::destructible<KT>
         && std::destructible<VT>
-*/
+
 struct bijective_map {
 private:
   HK keyhash{};  // {} applies default constructor

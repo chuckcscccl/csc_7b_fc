@@ -76,8 +76,8 @@ The rust program will also not be perfectly equivalent because of
 certain limitations of C++. For example, the C++ `optional` type
 cannot contain a reference, and I'm forced to return a *copy* of the
 value in an optional when looking up a value or key.  The equivalent
-of these methods (get_by_key, get_by_val) should return Option<VT&>
-and Option<KT&> in Rust.  
+of these methods (get_by_key, get_by_val) should return Option<&VT>
+and Option<&KT> in Rust.  
 
 Other differences between C++ and Rust that pertains to this program:
 

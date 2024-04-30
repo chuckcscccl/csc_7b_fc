@@ -133,6 +133,7 @@ private:
   HashMap<size_t,Vec<tuple<VT,size_t,size_t>>> vals{};  
 public:
   // default constructor suffice  -  write a fn new() -> Self in Rust
+  // this program follows the "Rule of Zero".
 
   size_t len() { return size; }
 
@@ -180,10 +181,10 @@ public:
 
   // The following are defined first because they're required by method set
   optional<tuple<KT,VT>> take_by_key(const KT& key) {
-   try {
     KT k; VT v; size_t kr, kc, vr, vc;
     auto hk = keyhash(key);
     // careful borrowing mutably in rust: may need to re-borrow after mutation:
+    if (!keys.contains(hk)) return None;
     auto& row = keys[hk];  // vector of keys (hash collisions)
     auto flen = row.size();
     int i = -1;  // don't try this trick in rust - you'll get crushed
@@ -192,7 +193,7 @@ public:
     }//while  (c++ has a weird way of getting the elements of a tuple)
     if (i==flen) { return None; }
     if (i+1<flen) { // delete from vector by swapping with the last element
-      std::swap(row[i],row[flen-1]);  // in rust, just vector.swap(i,flen-1)
+      std::swap(row[i],row[flen-1]);  // in rust, just yourvector.swap(i,flen-1)
       auto ir = get<1>(row[i]);  // must also adjust location of swapped value
       auto ic = get<2>(row[i]);
       get<2>(vals[ir][ic]) = i; // get returns l-value reference, in rust:
@@ -211,15 +212,13 @@ public:
     vals[vr].pop_back();
     size--;
     return make_tuple(k,v);  // Some((k,v))    
-   } catch (std::exception e) {}  // catches whatever exception
-   return None;
   }//take_by_key
   optional<tuple<KT,VT>> take_val(KT&& key) { return take_by_key(key); }
 
   optional<tuple<KT,VT>> take_by_val(const VT& val) {
-   try {
     KT k; VT v; size_t kr, kc, vr, vc;
     auto hv = valhash(val);
+    if (!vals.contains(hv)) return None;
     auto& row = vals[hv];
     auto flen = row.size();
     int i = -1;
@@ -231,7 +230,7 @@ public:
       std::swap(row[i],row[flen-1]); 
       auto ir = get<1>(row[i]);  
       auto ic = get<2>(row[i]);
-      get<2>(keys[ir][ic]) = i;  
+      get<2>(keys[ir][ic]) = i;
     }
     tie (v,kr,kc) = row.back();  
     row.pop_back(); 
@@ -240,14 +239,12 @@ public:
       std::swap(keys[kr][kc], keys[kr][blen-1]);
       auto ir = get<1>(keys[kr][kc]);
       auto ic = get<2>(keys[kr][kc]);
-      get<2>(vals[ir][ic]) = i;
+      get<2>(vals[ir][ic]) = kc;       // please note change from original "i"
     }
     tie (k,vr,vc) = keys[kr].back();
     keys[kr].pop_back();
     size--;
     return make_tuple(k,v);
-   } catch (std::exception e) {}
-   return None;
   }//take_by_key
   optional<tuple<KT,VT>> take_key(VT&& val) { return take_by_val(val); }
 
@@ -294,6 +291,25 @@ public:
 }; // bijective map
 
 
+// concocted example to test collision resolution: (optional to do in rust)
+struct student {
+  string name;
+  float gpa{3.5}; // average gpa at Hofstra
+  student(string n=""): name{n} {}
+  // required to satisfy concept std::equality_comparable<student>:
+  friend bool operator == (const student& a, const student& b) {
+    return a.name == b.name;
+  }
+}; //student
+struct student_hasher {
+  size_t operator () (const student& s) {
+    size_t sum = 0;
+    for(int i=0;i<s.name.size();i++) sum += (size_t)s.name[i];
+    return sum; // return sum of ascii values of name as hash value
+  }
+}; // student hasher
+
+
 int main() {
   bijective_map<string,int> daynum;
   string days[] = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
@@ -332,6 +348,33 @@ int main() {
      });
   }//for
   printf("size : %d\n", daynum.len()); // better be 7
+
+  /// collision test
+  student s1("mary");
+  student s2("larz");
+  student s3("narx");
+  student s4("oarw");
+  student s5("parv");
+  bijective_map<student,int,student_hasher,std::hash<int>> class_ranking;
+  class_ranking.set(s1, 1);
+  class_ranking.set(s2, 2);
+  class_ranking.set(s3, 3);
+  class_ranking.set(s4, 4);
+  class_ranking.set(s5, 5);
+  class_ranking.get_by_key(s3)
+    .transform([](auto& x){cout << "\nnarx's rank: " << x << endl; return 0;});
+  class_ranking.get_key(1)
+    .transform([](auto& x){cout << x.name << " is ranked 1\n"; return 0;});
+  // larz was found using AI, move larz down the ranks
+  class_ranking.set(s2,5);  // should delete ranking for parv
+  if (!class_ranking.get_by_key(s5)) cout << "no ranking for parv for now\n";
+  class_ranking.set(s5,2); // parv was trying hard without AI
+  class_ranking.take_by_key(s3); // narx dropped the class.
+  for(int i=0;i<6;i++) {
+    class_ranking.get_by_val(i)
+      .transform([i](auto& s){cout << i<<": "<<s.name << endl; return 0;});
+  }
+
   return 0;
 }//main
 // Program by Chuck Liang, on github under MIT license.

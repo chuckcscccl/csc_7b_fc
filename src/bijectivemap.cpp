@@ -206,7 +206,7 @@ public:
       std::swap(vals[vr][vc], vals[vr][blen-1]);
       auto ir = get<1>(vals[vr][vc]);
       auto ic = get<2>(vals[vr][vc]);
-      get<2>(keys[ir][ic]) = i;  
+      get<2>(keys[ir][ic]) = vc;  
     }
     tie (v,kr,kc) = vals[vr].back();
     vals[vr].pop_back();
@@ -239,7 +239,7 @@ public:
       std::swap(keys[kr][kc], keys[kr][blen-1]);
       auto ir = get<1>(keys[kr][kc]);
       auto ic = get<2>(keys[kr][kc]);
-      get<2>(vals[ir][ic]) = kc;       // please note change from original "i"
+      get<2>(vals[ir][ic]) = kc;       // note change from original "i"
     }
     tie (k,vr,vc) = keys[kr].back();
     keys[kr].pop_back();
@@ -289,7 +289,6 @@ public:
   }//set
   
 }; // bijective map
-
 
 // concocted example to test collision resolution: (optional to do in rust)
 struct student {

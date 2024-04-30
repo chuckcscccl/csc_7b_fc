@@ -2,7 +2,7 @@
 /// because the size of the array is part of its type in Rust.  The
 /// unused portions of the vector will hold value None.  Look at the
 /// source code for details.  This program was based on a
-/// roughly equivalent **[C++ Version]**
+/// roughly equivalent **[C++ Version](https://github.com/chuckcscccl/csc_7b_fc/blob/main/src/circularqueue.cpp)**.
 pub struct CircularQueue<T, const INITCAP:usize = 64> {
   q: Vec<Option<T>>,
   front: usize,

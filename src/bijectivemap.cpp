@@ -95,7 +95,7 @@ Other differences between C++ and Rust that pertains to this program:
 
         mymap.entry(key).and_modify(|x|{x+=1;});
 
-    Yes, entry is another MONAD MONSTER! (and it's not even Holloween).
+    Yes, entry is another MONAD MONSTER! (and it's not even Halloween).
 
 I've also written out a skeleton for you in Rust and the signatures of
 the functions you must implement.  Your program must continue from 

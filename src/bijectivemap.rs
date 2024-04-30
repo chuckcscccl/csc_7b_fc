@@ -55,7 +55,7 @@ impl HashStealer {
   }//base_hash
 }//impl HashStealer
 
-/// This is can be your bijective map struct
+/// This is your bijective map struct
 pub struct BijectiveMap<KT, VT, const CAP:usize = 16> {
   keys: HashMap<usize,Vec<(KT,usize,usize)>>,
   vals: HashMap<usize,Vec<(VT,usize,usize)>>,
@@ -84,8 +84,10 @@ impl<KT:Hash+Eq, VT:Hash+Eq, const CAP:usize> BijectiveMap<KT,VT,CAP> {
 
    /// Returns a immutable reference to the value corresponding to
    /// the given key, if it exists.  Note that there can't be a 
-   /// Option<&mut T> version of this method because changing the
+   /// `Option<&mut T>` version of this method because changing the
    /// value will require adjusting other associations in the map.
+   /// This function has been completed and you can consult its source
+   /// as hint.
    pub fn get_by_key(&mut self, key:&KT) -> Option<&VT> {
     let hk = self.hash(key);
     if !self.keys.contains_key(&hk) {return None;}
@@ -100,8 +102,8 @@ impl<KT:Hash+Eq, VT:Hash+Eq, const CAP:usize> BijectiveMap<KT,VT,CAP> {
 } // impl
 
 /// **Place all your code in another impl block, and fully implement the
-/// methods [BijectiveMap::get_by_val], [BijectiveMap::take_by_key],
-/// [BijectiveMap::take_by_val], and [BijectiveMap::set].**
+/// methods** [BijectiveMap::get_by_val], [BijectiveMap::take_by_key],
+/// [BijectiveMap::take_by_val], and [BijectiveMap::set].
 impl<KT:Hash+Eq, VT:Hash+Eq, const CAP:usize> BijectiveMap<KT,VT,CAP> {
 
    /// Returns number of key-value pairs in this map.

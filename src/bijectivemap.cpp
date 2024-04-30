@@ -131,8 +131,6 @@ private:
   size_t size{0};
   HashMap<size_t,Vec<tuple<KT,size_t,size_t>>> keys{};
   HashMap<size_t,Vec<tuple<VT,size_t,size_t>>> vals{};  
-  //Vec<tuple<KT,size_t,size_t>> keys[ROWS];
-  //Vec<tuple<VT,size_t,size_t>> vals[ROWS];
 public:
   // default constructor suffice  -  write a fn new() -> Self in Rust
 
@@ -142,7 +140,7 @@ public:
   optional<const VT> get_by_key(const KT& key) {
     try {
       auto hk = keyhash(key);
-      auto row = keys[hk];  // throws std::out_of_range if key not found
+      auto& row = keys[hk];  // throws std::out_of_range if key not found
       for(auto& [k,vr,vc] : row) {  // for (k,vr,vc) in rows.iter() (rust)
         if (k==key) {
           VT v; size_t kr, kc;
@@ -163,7 +161,7 @@ public:
   optional<const KT> get_by_val(const VT& val) {
     try {
       auto hv = valhash(val);
-      auto row = vals[hv];  
+      auto& row = vals[hv];  
       for(auto& [v,kr,kc] : row) {
         if (v==val) {
           KT k; size_t vr, vc;
@@ -182,9 +180,11 @@ public:
 
   // The following are defined first because they're required by method set
   optional<tuple<KT,VT>> take_by_key(const KT& key) {
+   try {
     KT k; VT v; size_t kr, kc, vr, vc;
     auto hk = keyhash(key);
-    auto row = keys[hk];  // vector of keys (hash collisions)
+    // careful borrowing mutably in rust: may need to re-borrow after mutation:
+    auto& row = keys[hk];  // vector of keys (hash collisions)
     auto flen = row.size();
     int i = -1;  // don't try this trick in rust - you'll get crushed
     while (++i < flen) {
@@ -210,14 +210,17 @@ public:
     tie (v,kr,kc) = vals[vr].back();
     vals[vr].pop_back();
     size--;
-    return make_tuple(k,v);  // Some((k,v))
+    return make_tuple(k,v);  // Some((k,v))    
+   } catch (std::exception e) {}  // catches whatever exception
+   return None;
   }//take_by_key
   optional<tuple<KT,VT>> take_val(KT&& key) { return take_by_key(key); }
 
   optional<tuple<KT,VT>> take_by_val(const VT& val) {
+   try {
     KT k; VT v; size_t kr, kc, vr, vc;
     auto hv = valhash(val);
-    auto row = vals[hv];  
+    auto& row = vals[hv];
     auto flen = row.size();
     int i = -1;
     while (++i < flen) {
@@ -243,6 +246,8 @@ public:
     keys[kr].pop_back();
     size--;
     return make_tuple(k,v);
+   } catch (std::exception e) {}
+   return None;
   }//take_by_key
   optional<tuple<KT,VT>> take_key(VT&& val) { return take_by_val(val); }
 
@@ -304,9 +309,12 @@ int main() {
 
   // But what if you misspelled Wednesday? Need if (option).. but better
   // to do real monadic error handling with .map (.transform in C++23):
-  
-  daynum.get_val("Thursday").transform(println("Thursday is day"));
 
+  // better not forget the if... (nullopt == false).  But if nobody ever
+  // forgot the if.. then why did the null pointer cost a billion?
+  if (daynum.take_val("Wedesday")) cout << "what a day!\n";
+
+  daynum.get_val("Thursday").transform(println("Thursday is day"));
   daynum.get_key(7).transform(println("day 7 is"));
   
   auto opt = daynum.set("Sunday",1); // must also erase association for Monday
@@ -323,9 +331,7 @@ int main() {
        return 0;
      });
   }//for
-
   printf("size : %d\n", daynum.len()); // better be 7
-
   return 0;
 }//main
 // Program by Chuck Liang, on github under MIT license.

@@ -12,10 +12,16 @@
 //! `cargo new` a fresh crate for your assignment and add the `path` to
 //! `csc_7b_fc` to Cargo.toml as you did for the first Rust assignment.
 //! 
-//! Place the following in the main.rs of your crate.
+//! Do not touch the `csc_7b_fc` crate.  Copy the `bijectivemap.rs` file
+//! to the src directory of your own crate, then 
+//! place the following in the main.rs of your crate.
 //! ```
-//!    use csc_7b_fc::bijectivemap::*;
+//!    mod bijectivemap;
+//!    use bijectivemap::*;
 //! ```
+//!
+//! **NOTE: DO NOT EDIT THE csc_7b_fc CRATE. Copy the skeleton code to
+//!       your own crate!**
 //!
 //! When you have completed the implementation, emulate the main in the
 //! C++ program to test it.  It can begin with ...

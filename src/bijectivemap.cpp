@@ -183,8 +183,8 @@ public:
   optional<tuple<KT,VT>> take_by_key(const KT& key) {
     KT k; VT v; size_t kr, kc, vr, vc;
     auto hk = keyhash(key);
-    // careful borrowing mutably in rust: may need to re-borrow after mutation:
     if (!keys.contains(hk)) return None;
+    // careful borrowing mutably in rust: may need to re-borrow after mutation:
     auto& row = keys[hk];  // vector of keys (hash collisions)
     auto flen = row.size();
     int i = -1;  // don't try this trick in rust - you'll get crushed
@@ -197,7 +197,7 @@ public:
       auto ir = get<1>(row[i]);  // must also adjust location of swapped value
       auto ic = get<2>(row[i]);
       get<2>(vals[ir][ic]) = i; // get returns l-value reference, in rust:
-    }                           // keys.entry(ir).and_modify(|v|v[ic]=i);
+    }                           // keys.entry(ir).and_modify(|v|v[ic].2=i);
     tie (k,vr,vc) = row.back();   // now pop the value : O(1) delete
     row.pop_back();  // pop_back returns void (rust pop returns Option)
     // got key and location of value, now find value...

@@ -9,7 +9,7 @@
 //! (see documentation for each [BijectiveMap] method).
 //!
 //! Go into the `csc_7b_fc` crate and `git pull` the latest updates.  Then
-//! `cargo new` a fresh crate for your assignment and add the `path` to
+//! `cargo new` a fresh crate for your assignment and optionally add the `path` to
 //! `csc_7b_fc` to Cargo.toml as you did for the first Rust assignment.
 //! 
 //! Do not touch the `csc_7b_fc` crate.  Copy the `bijectivemap.rs` file

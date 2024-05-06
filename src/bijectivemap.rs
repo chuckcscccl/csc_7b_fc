@@ -33,6 +33,7 @@
 //!      println!("Wednesday is day {}",d);
 //!    });
 //!```
+//!The `studenthasher` component that tests hash collisions is optional.
 //!
 #![allow(unused_mut)]
 use std::collections::{HashMap, hash_map::RandomState};

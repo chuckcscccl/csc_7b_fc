@@ -394,3 +394,6 @@ pub mod bijectivemap;
 
 ///////////// circular queue 
 pub mod circularqueue;
+
+//////////// AVL Tree
+pub mod avltree;

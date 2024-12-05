@@ -388,13 +388,12 @@ pub fn parse(tokens: &Vec<Expr>) -> Option<Expr> {
     return stack.pop();
 } //parse
 
-
 ///////////// bijective map
 pub mod bijectivemap;
 
-///////////// circular queue 
+///////////// circular queue
 pub mod circularqueue;
 
 //////////// AVL Tree
-pub mod avltree;
 pub mod avlmap;
+pub mod avltree;

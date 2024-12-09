@@ -68,6 +68,26 @@ pub fn newpair<K, V>(k: K, v: V) -> KVPair<K, V> {
 /// ```
 /// Study the similar methods in the [crate::avltree] module.
 ///
+/// **Additional Hints**
+///
+/// You will have to add some procedures specific to type `Bst<KVPair<KT,VT>>`.
+/// Instead of editing the avltree.rs file, you can do this with another 
+/// "impl" block:
+/// ```
+///   impl<KT:Ord,VT> Bst<KVPair<KT,VT>> {
+///     // add new procedures here
+///   }
+/// ```
+///
+/// Also, it's ok to move an item out of a struct right before the end
+/// of its lifetime (about to be deallocated). Just as an example:
+/// ```
+///   fn f() -> String {
+///     let pair = KVPair{key: String::from("abc"), val:123};
+///     pair.key // Ok because pair won't be needed again
+///   }
+/// ```
+///
 pub struct AVLMap<KT, VT> {
     inner: AVLSet<KVPair<KT, VT>>,
 }
@@ -119,7 +139,7 @@ impl<KT: Ord + Eq, VT> AVLMap<KT, VT> {
     /// the previous key-value pair, if it exists.  If you define this function
     /// correctly, then the [Self::insert] function can be implemented by
     /// calling `self.and_modify(key, |_|val).is_none()`.
-    pub fn and_modify<F>(&mut self, key: KT, modifer: F) -> Option<KVPair<KT, VT>>
+    pub fn and_modify<F>(&mut self, key: KT, modifier: F) -> Option<KVPair<KT, VT>>
     where
         F: Fn(Option<&KVPair<KT, VT>>) -> VT,
     {

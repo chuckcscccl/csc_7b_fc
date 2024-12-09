@@ -397,3 +397,4 @@ pub mod circularqueue;
 //////////// AVL Tree
 pub mod avlmap;
 pub mod avltree;
+pub mod avlnavigator;

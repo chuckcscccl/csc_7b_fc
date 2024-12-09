@@ -126,20 +126,20 @@ impl<T: Ord> Bst<T> {
         }
     } // height
 
-    /// Returns a mutable reference of the left subtree, which is Empty if
+    /// Returns a reference of the left subtree, which is Empty if
     /// it doesn't exist
-    pub fn get_left(&mut self) -> &mut Bst<T> {
+    pub fn get_left(&self) -> &Bst<T> {
         match self {
             Empty => self,
-            Node(bx) => &mut bx.left,
+            Node(bx) => &bx.left,
         }
     }
-    /// Returns a mutable reference of the right subtree, which is Empty if
+    /// Returns a reference of the right subtree, which is Empty if
     /// it doesn't exist
-    pub fn get_right(&mut self) -> &mut Bst<T> {
+    pub fn get_right(&self) -> &Bst<T> {
         match self {
             Empty => self,
-            Node(bx) => &mut bx.right,
+            Node(bx) => &bx.right,
         }
     }
     /// Returns an (immutable) reference to the item stored at the root at
@@ -172,8 +172,8 @@ impl<T: Ord> Bst<T> {
     /// The procedure returns true if insertion was successful (v is not a
     /// duplicate). Look at the source code:
     /// this procedure is **recursive**, but with **zero-overhead** in the
-    /// sense that it is not at all less efficient than a non-recursive
-    /// version (which is more difficult to write).  To maintain a balanced
+    /// sense that it is not less efficient than a non-recursive version
+    /// (which is much more difficult to write).  To maintain a balanced
     /// tree, rotations must be applied after an insertion (or removal)
     /// as we "travel back up to the root."  This may suggest having a
     /// "parent" pointer at each node, which is bad in any language but
@@ -188,7 +188,7 @@ impl<T: Ord> Bst<T> {
     /// we are naturally returning back up to the root. All we have to do
     /// is to re-balance the tree after
     /// each recursive call.  Because a non-recursive procedure must also
-    /// create a stack, there is no additional cost to using recursion.
+    /// create a stack, there is virtually no cost to using recursion.
     pub fn insert(&mut self, v: T) -> bool {
         // returns false if duplicate
         let answer; // must be assigned to later

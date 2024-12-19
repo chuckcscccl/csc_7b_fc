@@ -1,35 +1,22 @@
 //! ## AVL Tree Navigator Module.
 //! A "tree navigator" is similar in concept to an interator. It works by
 //! keeping a "current" node and a stack of "ancestors" along
-//! with whether current is on the left of right of the ancestor.
+//! with whether current is on the left or right of the ancestor.
 //! With this information we can navigate to any part of tree.
-//! Note that [std::cell::RefCell] is sometimes required for interior mutability.
-//! Operations such as `.seek`, `.go_left`, etc. are all mutations on the 
-//! navigtator and would prevent a function from returning references
-//! found by the navigator: the specified lifetime ends with mutation. In 
-//! such situations, wrapping a navigator inside a RefCell should work.
-//! Since the navigator does not actually mutate the tree, it's still safe.
+//! Only immutable operations on the tree are permitted with a navigator.
+//! Example:
 //! ```
 //!   fn f<'lt, T:Ord>(tree:&'lt Bst<T>, key:&T) -> Option<&'lt T> {
-//!     let refcell = AVLNavigator::new_refcell(tree);
-//!     let mut navigator = refcell.borrow_mut();
+//!     let mut navigator = AVLNavigator::start(tree);
 //!     navigator.seek(key);
 //!     navigator.goto_predecessor();
-//!     navigator.get_current().get_item()
+//!     navigator.current_item()
 //!   }
-//! ```
-//! However, using RefCell always carries the risk of runtime panics as well
-//! as runtime overhead.  If the above function didn't need to return
-//! `.get_current().get_item()` and just used it in place, there would be
-//! no need for RefCell.  In that case the navigator can be created with
-//! ```
-//!     let mut navigator = AVLNavigator::start(tree);
 //! ```
 //!
 use crate::avltree::Bst::*;
 use crate::avltree::*;
 use crate::avlmap::KVPair;
-use core::cell::RefCell;
 
 /// Structure for a Tree Navigator
 #[derive(Clone)]
@@ -43,11 +30,6 @@ impl<'lt,T:Ord> AVLNavigator<'lt,T> {
   /// the current "pointer".
   pub fn start(tree: &'lt Bst<T>) -> Self {
     AVLNavigator {ancestors:Vec::new(), current:tree}
-  }
-
-  /// creates a [std::cell::RefCell] for an AVLNavigator
-  pub fn new_refcell(tree: &'lt Bst<T>) -> RefCell<Self> {
-    RefCell::new(AVLNavigator {ancestors:Vec::new(), current:tree})
   }
 
   /// returns the current node (or Empty)
@@ -106,7 +88,7 @@ impl<'lt,T:Ord> AVLNavigator<'lt,T> {
   /// Navigate to the successor node, or stay at the same node if the successor
   /// doesn't exist. The successor is either the leftmost child of the
   /// right subtree, or, if the right subtree does not exist, the
-  /// closes ancestor that the current node is to the left of.
+  /// closest ancestor that the current node is to the left of.
   pub fn goto_successor(&mut self) -> bool {
     let mut answer = false;
     if let Node(cell) = self.current {
@@ -171,8 +153,8 @@ impl<'lt,T:Ord> AVLNavigator<'lt,T> {
   }
 
   /// returns the value inside the current node, if it exists
-  pub fn current_item(&self) -> Option<&T> {
-    self.current.get_item()
+  pub fn current_item(&self) -> Option<&'lt T> {
+    self.get_current().get_item()
   }
 
   /// Navigate to the node sharing the same parent as the current node,
@@ -290,9 +272,8 @@ pub fn seek_key(&mut self, key:&KT) -> bool {
 
 // sample function that uses navigator
 fn f<'lt, T:Ord>(tree:&'lt Bst<T>, key:&T) -> Option<&'lt T> {
-  let refcell = AVLNavigator::new_refcell(tree);
-  let mut navigator = refcell.borrow_mut();
+  let mut navigator = AVLNavigator::start(tree);
   navigator.seek(key);
   navigator.goto_predecessor();
-  navigator.get_current().get_item()
+  navigator.current_item()
 }

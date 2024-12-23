@@ -67,7 +67,7 @@ impl<T:Ord> Eytzinger<T> {
   }
 
   fn from_bstr(&mut self, tree: Bst<T>, index:usize) {
-    if index>=self.nodes.len() || self.nodes[index].is_none() { return; }
+    if index>=self.nodes.len() { return; }
     match tree {
       Empty => { /* self.nodes[index] = None; */},  // stays None
       Node(cell) => {

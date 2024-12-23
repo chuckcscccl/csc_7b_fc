@@ -60,7 +60,7 @@ impl<T:Ord> Eytzinger<T> {
 	 .unwrap_or(-2);
        if (c == -2) { return false; }
        else if (c == 0) { return true; }
-       else if (c == -1) { current = left(current); }
+       else if (c == 1) { current = left(current); }
        else { current = right(current);}
     }
     false

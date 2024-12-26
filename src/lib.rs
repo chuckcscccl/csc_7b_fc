@@ -399,3 +399,5 @@ pub mod avlmap;
 pub mod avltree;
 pub mod avlnavigator;
 pub mod eytzinger;
+
+pub mod redblack;

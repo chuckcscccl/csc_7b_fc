@@ -193,43 +193,5 @@ impl<T:Ord> RedBlackTree<T> {
     temp.unwrap().item
   }//delmax
 
-  ///// Rotations
-  fn LL(&mut self, index:usize) { // "right rotation"
-    let left = get_left(&self.nodes[index]);
-    let right = get_right(&self.nodes[index]);
-    let ll = get_left(&self.nodes[left]);
-    let lr = get_right(&self.nodes[left]);    
-    self.nodes.swap(left,index);
-    set_left(&mut self.nodes[index], ll);
-    set_left(&mut self.nodes[left], lr);
-    set_right(&mut self.nodes[left], right);
-    set_right(&mut self.nodes[index], left);
-  }
-
-  fn RR(&mut self, index:usize) { // "left rotation"
-    let right = get_right(&self.nodes[index]);
-    let left = get_left(&self.nodes[index]);
-    let rl = get_left(&self.nodes[right]);
-    let rr = get_right(&self.nodes[right]);
-    self.nodes.swap(index,right);
-    set_right(&mut self.nodes[index],rr);
-    set_right(&mut self.nodes[right],rl);
-    set_left(&mut self.nodes[right],left);
-    set_left(&mut self.nodes[index],right);
-  }
 
 }//RedBlackTree
-
-/*
-      x          y
-     / \        / \
-    y   R      LL  x 
-   / \            / \
-  LL LR          LR  R
-
-      y          x
-     / \        / \
-    x  RR      L   y 
-   / \            / \
-  L  RL          RL RR
-*/

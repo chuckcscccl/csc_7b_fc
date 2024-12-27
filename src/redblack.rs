@@ -148,7 +148,7 @@ impl<T:Ord> RedBlackTree<T> {
     let current_left = self.nodes[current].as_ref()?.left;
     if current_left != NIL {
       // replace current node with max node on left (predecessor)
-      let mut deleted = self.delmax(self.nodes[current].as_ref()?.left);
+      let mut deleted = self.delmax(current);
       std::mem::swap(&mut deleted,&mut self.nodes[current].as_mut()?.item);
       Some(deleted)
     } 
@@ -177,6 +177,8 @@ impl<T:Ord> RedBlackTree<T> {
   // remove helper - assume not called on root, nil:
   fn delmax(&mut self, mut current:usize) -> T {
     let mut ancestors = vec![];
+    let original_current = current;
+    current = get_left(&self.nodes[current]);
     while current!=NIL {
       ancestors.push(current);
       self.nodes[current].as_ref().map(|n|current = n.right);
@@ -185,6 +187,9 @@ impl<T:Ord> RedBlackTree<T> {
     let last_left = get_left(&self.nodes[last]);
     if let Some(grandparent) = ancestors.pop() {
        set_right(&mut self.nodes[grandparent], last_left);
+    }
+    else { // immediate left node is deleted
+       set_left(&mut self.nodes[original_current], last_left);
     }
     self.freelist.push(last);
     self.size -= 1;
@@ -212,6 +217,11 @@ impl<T:Ord> RedBlackTree<T> {
     let rl = get_left(&self.nodes[right]);
     let rr = get_right(&self.nodes[right]);
     self.nodes.swap(index,right);
+
+    set_black(&mut self.nodes[index],false);
+    set_black(&mut self.nodes[right],true);
+    //set_black(&mut self.nodes[rr],false);   // ???
+
     set_right(&mut self.nodes[index],rr);
     set_right(&mut self.nodes[right],rl);
     set_left(&mut self.nodes[right],left);

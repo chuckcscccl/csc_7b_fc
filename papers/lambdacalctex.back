@@ -31,7 +31,7 @@
 \begin{document}
 
 \begin{center}
-{\large\bf Class Notes on Lambda Calculus}\\[5pt]
+{\large\bf Class Notes on the Untyped Lambda Calculus}\\[5pt]
   {\normalsize\bf Chuck Liang}\\[5pt]
   {\normalsize\bf Hofstra University Computer Science}
 \end{center}
@@ -60,9 +60,8 @@ languages even when they don't use lambda expressions explicitly.
 
 There are two versions of the lambda calculus: typed and untyped.  They
 roughly correspond to statically typed (compiler-based) and
-dynamically typed (interpreter-based) languages.  This document will
-first focus on the untyped lambda calculus.  Typed lambda calculi will be
-briefly covered at the end.
+dynamically typed (interpreter-based) languages.  This document will focus
+on the untyped lambda calculus.
 
 \medskip
 
@@ -386,14 +385,6 @@ not free variables.  It would be illegal to change the outer (rightmost) $x$ to
 something else.  Free variables correspond to external variables which may
 be in use elsewhere, not just {\em locally.\/}
 
-\subsubsection*{Eta Equivalence}
-
-Besides $\alpha$-equivalence, we briefly mention another rule called
-eta-conversion: $m$ is $\eta$-equivalent to $\lambda x. (m ~x)$ where
-$x$ is not free in $m$.
-Both $\eta$ and $\alpha$ are mere syntactic equivalences: only
-$\beta$-reduction represents real computational steps.
-
 
 \section{Basic Combinators}
 
@@ -476,9 +467,6 @@ reduced $(2 ~ f~x)$ to
 $f~(f~x)$.  Plus works by substituting one number into the end of the
 other number.  Times works by replacing each $f$ with more $f's$.  As
 an exercise, you can verify that $(TIMES~2~3)=6$.
-
-Note that, under $\eta$ equivalence, $TIMES$ can also be written as
-$\lambda m\lambda n\lambda f.m~(n~f)$.
 
 We won't go further into Church numerals except to say that all basic
 arithmetic operations can be represented as pure lambda calculus.  Even though
@@ -630,13 +618,8 @@ The recursion stoped and returned $0$ when $(ISNIL~NIL)$ reduced to $TRUE$.
 We note that all elements of this program are definable in pure lambda calculus.
 
 
-\section{Properties of Programming Languages}
 
-The previous section showed how common programming language constructs can
-be represented by lambda terms.  Towards building a complete programming
-language, we must also address several additional issues.
-
-\subsection{Order of Evaluation}
+\section{Order of Evaluation}
 
 As examples such as $SKI$ show, there are often multiple beta-redexes inside a
 term and there are different strategies for selecting which one to reduce first.
@@ -720,7 +703,7 @@ also called the $Y$ combinator:
 We will need these versions of the combinators in our implementation of
 pure lambda calculus in real programming languages, such as Python and Perl.
 
-\subsection{Static Scoping}
+\section{Static Scoping}
 
 A critical subject we now address in lambda calculus concerns the third C program in the
 introduction.  This program shows the difference between static (or lexical)
@@ -754,19 +737,18 @@ This term beta-reduces to $1$  (verify this yourself).
 The scoping rules of lambda calculus are those of static scoping.
 
 
-\subsection{The Undecidability of the Halting Problem}
+\section{The Undecidability of the Halting Problem}
 
-To complete this introduction to untyped lambda calculus, we prove in
-pure lambda calculus the most important theoretical result in computer
-science: the Halting Problem.  Programs can take other programs as
-input and attempt to analyze their behavior: this is called {\em
-  static analysis.}  Examples of such programs include compilers and
-malware detectors.  The Halting Problem is: does there exists a
-program that, given the source code of any program {\em as well as its
-  input,\/} will return true if that program terminates (halts) on
-that input, and false if that program does not terminate.  The problem
-is {\em undecidable\/} because there cannot be such a program: the
-very existence of such a program will lead to a logical contradiction.
+To complete this introduction, we prove in pure lambda calculus the most
+important theoretical result in computer science: the Halting Problem.
+Programs can take other programs as input and attempt to analyze their
+behavior: this is called {\em static analysis.}  Examples of such programs
+include compilers and malware detectors.  The Halting Problem is: does there
+exists a program that, given the source code of any program {\em as well as its
+  input,\/} will return true if that program terminates (halts) on that input,
+and false if that program does not terminate.  The problem is {\em undecidable\/}
+because there cannot be such a program: the very existence of such a program
+will lead to a logical contradiction.
 
 The Halting problem can be formulated in terms of Turing Machines as well
 as the (untyped) lambda calculus and several other equivalent formal systems.
@@ -811,197 +793,10 @@ determine if there are errors in our programs.  Obviously,
 these results are relevant to the design and use of programming
 languages.
 
-To conclude our presentation of the untyped lambda calculus, find a
-Python program in Appendix \ref{appendix1} that implements most of the
-contents of these notes.
 
-\newpage
-\section{Typed Lambda Calculus}
+\section{Pure Untyped Lambda Calculus in Python}
 
-Types are critically important in high level programming.  An expression
-such as \verb+"abc"/2.5+ it is considered nonsense because it does not
-{\em type check.\/}  Virtually all languages rely on some form of type
-information.  Even at the machine level, where all values are
-binary numbers, one can argue that types exist in the form of the sizes
-of data in bytes.  Certainly all higher level languages recognize types.
-In addition to rejecting nonsense,
-types allow compilers to generate optimized code, and is an
-important reason why compiled languages perform better than
-interpreted ones.  Even languages such as Python should not be called
-``untyped:'' the difference is that they only check types at {\em
-  runtime\/} (aka dynamic typing).
-
-Formally, there is a close relationship between type theory and
-mathematical logic.  A logically consistent program is {\em well
-  typed.\/}
-There are various versions of {\em ``typed lambda calculi.''\/}
-The most basic one was also invented by Church and is known as ...
-
-\subsection{The Simply Typed Lambda Calculus}
-
-The type of a lambda-abstraction $\lambda x.M$ is of the form
-$a\rightarrow b$ where $a$ is the type of the argument
-($\lambda$-bound variable $x$ ) and $b$ is the type of the body
-$M$. For example, $I=\lambda x.x$ has type $a\rightarrow a$ where $a$
-can be replaced by any type (int, string, etc).  $K=\lambda x\lambda
-y.x$ has type $a\rightarrow b \rightarrow a$, with the $\rightarrow$
-operator on types associating to the right.  Variables are associated
-with types that they're assumed to have, using notation such as
-$x:int$.
-From a set of assumptions we derive a type on the right of
-the $\vdash$ symbol using the following rules:
-$$
-\infer{x:a,\ldots \vdash x:a}{}
-\qquad
-\infer{\ldots \vdash \lambda x.M: a\rightarrow b}
-      {x:a,\ldots \vdash M:b}
-      \qquad
-      \infer{\ldots \vdash (M~N): b}
-      {\ldots \vdash M: a\rightarrow b &\quad \ldots \vdash N:a}
-      $$
-You should be able to derive the types for $I$ and $K$ using the
-first two rules.
-The last rule correspond to the classical syllogism
-{\em modus ponens\/} and establishes the correspondence between types
-and logic.  That is, if $\rightarrow$ can be read as {\em implies\/} then
-the type of every combinator must be a propositional {\em tautology\/}
-because the rules of typing are isomorphic to the rules of logic (this is
-called the {\em Curry-Howard Isomorphism\/}).
-The following is a sample type derivation using the rules:
-$$
-\infer{\vdash \lambda x\lambda y.y~x : a \rightarrow (a\rightarrow b) \rightarrow b}
-      {\infer{x:a \vdash \lambda y:y~x : (a\rightarrow b) \rightarrow b}
-        {\infer{x:a, y:a\rightarrow b\vdash (y~x) : b}
-          {\infer{y:a\rightarrow b\vdash y:a\rightarrow b}{} &\quad
-            \infer{x:a \vdash x:a}{}}}}
-      $$
-      You can verify that the derived type is a tautology by constructing a truth
-      table.
-
-The typing rules can be used for both {\em type checking\/} as well as
-{\em type inference.\/}  Advanced languages can infer types even when
-type information is missing in the source code.
-      
-An important consequence of introducing types is that beta-reduction
-(and alpha/eta conversion) must preserve the types of terms:
-{\flushleft\bf Theorem: Type Soundness.} {\em If $\vdash s:A$ is a valid type derivation
-  for lambda term $s$ and $s\Rightarrow_\beta t$, then $\vdash t:A$ is also a
-  valid type derivation.}
-
-  This core result (also referred to as {\em subject reduction\/}) is what we
-  mean by a computation being {\em type safe:\/} 
-  3+1 is an expression of type int, and 4, the normal form, is also an int.
-  So type checking can be done before, during, or after beta-reduction. If
-  it's done before reduction, we can call it {\em static typing.\/}
-  If done during reduction, it can be called {\em dynamic typing.\/}
-
-An example of a term that cannot be typed is a free variable $x$ by
-itself, not bound at any level.  Another untypable term is $\lambda
-x.(x~x)$.  The type inference rules imply that the bound variable
-$x$ must have {\em both\/} type $a$ and type $a\rightarrow a$.  The
-type expression itself would have to be infinitely long, which is not
-allowed.
-
-\medskip
-
-Although beta reduction, alpha conversion, and the static scoping of
-free and bound variables remain the same, we cannot use some of the
-same constructs from the untyped lambda calculus to build a
-programming language.  For example, $\lambda x\lambda y.x$ has type
-$a\rightarrow b\rightarrow a$ but $\lambda x\lambda y.y$ has type
-$a\rightarrow b\rightarrow b$.  These are distinct types: we cannot
-call both ``bool''.  Forcing them to be of the same type will restrict
-both to $a\rightarrow a\rightarrow a$, but this means, for example, we
-would not be able to construct pairs containing different types of
-values such as nested pairs (the {\em car\/} and the {\em cdr\/} must be
-of the same type).
-
-Simply typed, and most other typed lambda calculus also contain the
-following property:
-
-{\flushleft\bf Theorem: Strong Normalization.} {\em  There are no
-  infinite beta-reduction sequences.\/}
-
-Combined with the Church-Rosser property (which still holds), this
-means that every reduction must terminate in the same normal form.
-
-This result implies we cannot write programs with loops (or recursion)
-without certain additional constructs.  The fixed pointer operator,
-with property $FIX~M = M~(FIX ~M)$, must be imported as an extra
-constant.  If we are to give $FIX$ a type, it would have to be
-$(a\rightarrow a)\rightarrow a$.  This is a {\em not a tautology,\/}
-so no pure lambda term can have this type.
-
-Thus, the simply typed lambda calculus is insufficient for creating a
-programming language.  A more elaborate type system is required, one with
-additional terms that allow us to define data structures and recursive
-programs.
-
-\subsection{Algebraic Types}
-
-We choose to present a type system close to what's used in many typed,
-functional programming languages.  In addition to $\rightarrow$, this
-type system allows several other {\em type constructors\/} including
-$*$ for cartesian product (pairs) and $|$ for disjoint union (sums).
-The system also allows the definition of recursive types via a $\mu$
-constructor, though this constructor is usually omitted syntactically.
-These types constructors allow us to define data structures that are
-referred to as ``algebraic data types.''
-
-For example, the following is a possible type definition for binary trees
-containing integers:
-$$
-  type ~Bintree ~=~ Nil~ |~ Node~ of~ int * Bintree * Bintree
-$$
-Here, the $|$ operator states that a bintree is constructed in one of
-two ways: an empty tree called $Nil$, or a $Node$.  A Node is defined
-as a product (tuple) containing an integer and a pair of other
-Bintrees.  The definition is implicitly recursive (using the hidden
-$\mu$ operator, which is like a fixedpoint operator for types).  The
-lambda calculus is extended with terms that can represent such types.
-A sample term of type Bintree is
-$$Node(5,Node(2,Nil,Nil),Node(8,Nil,Nil))$$
-This is a tree with 5 at the root,
-2 to the left and 8 to the right.
-
-
-\subsection{Quantification over Types.}
-
-Types can also be abstracted over (made generic).  Most programmers
-are already familiar with templates/generics.  In terms of logic, a
-generic type variable is a kind of universally quantified ($\forall$)
-variable.  We sometimes write $\Pi a.a\rightarrow a$ for the type of a
-function of generic type.  Most languages use the angle-bracket syntax
-for quantified type variables:
-\begin{verbatim}
-  type Bintree<T> = Nil | Node of T * Bintree<T> * Bintree<T>
-\end{verbatim}
-Note that all type variables must be bound (quantified), so
-\begin{verbatim}
-  type Bintree<T> = Nil | Node of T * Bintree<A> * Bintree<B>
-\end{verbatim}
-is not a logically acceptable definition: A and B are not bound.
-
-\subsection{Subtyping}
-
-A term cannot have conflicting types: something can't be both a circle
-and a rectangle.  However, a circle is also a ``shape.''  This is called
-subtyping.  The typical notation is $A:B$ meaning that $A$ is a subtype of
-$B$.  Subtyping establishes a ``is-a'' relationship between types and their
-terms: a circle {\em is a} shape.  Subtyping is most typically found
-in object oriented programming languages.  Its benefits are debatable
-but that's a story for another day...
-
-
-\newpage
-\appendix
-    {\Large {\bf APPENDIX}}
-    \medskip   
-
-
-\section{Pure Untyped Lambda Calculus in Python}\label{appendix1}
-
-Most non-statically typed scripting languages support untyped lambda terms directly. We
+Most untyped scripting languages support untyped lambda terms directly. We
 summarize the creation of a basic programming language from pure lambda
 calculus by implementing it using pure lambda terms in Python.
 \begin{verbatim}
@@ -1077,8 +872,71 @@ print(Unchurch(ANSWER))  ### prints 15
 # end of program
 \end{verbatim}
 
+\section{Loose Ends and Typed Lambda Calculus}
 
+There are some important items about the lambda calculus that I did not
+cover, including {\em ``eta-reduction:''\/} this rule just states
+that $A = \lambda x.A~x$.  For example, the term for Church mulitplication,
+$\lambda m\lambda n\lambda f\lambda x.m~(n~f)~x$, can also be written
+equivalently as ($\eta$-reduces to) $\lambda m\lambda n\lambda f.m~(n~f)$. 
+Most importantly, we did not
+cover {\em typed\/} lambda calculus. A typed program is a logically
+consistent program: a value cannot have conflicting types.  Types can
+also be abstracted over (made generic).  The type of a function is written
+$a\rightarrow b$ where $a$ is the type of the argument ($\lambda$-bound variable) and $b$ is the type of the body.  $I=\lambda x.x$, for example, has
+generic type $a\rightarrow a$ and $K=\lambda x\lambda y.x$ has generic
+type $a\rightarrow b \rightarrow a$, with the $\rightarrow$ operator
+on types associating to the right.  Variables are associated with types
+that they're assumed to have, using notation such as $x:int$.  From
+a set of assumptions we derive a type on the right of the $\vdash$ symbol
+using the following rules:
+$$
+\infer{x:a,\ldots \vdash x:a}{}
+\qquad
+\infer{\ldots \vdash \lambda x.M: a\rightarrow b}
+      {x:a,\ldots \vdash M:b}
+      \qquad
+      \infer{\ldots \vdash (M~N): b}
+      {\ldots \vdash M: a\rightarrow b &\quad \ldots \vdash N:a}
+      $$
+You should be able to derive the types for $I$ and $K$ using the
+first two rules.
+The last rule correspond to the classical syllogism
+{\em modus ponens\/} and establishes the correspondence between types
+and logic.  That is, if $\rightarrow$ can be read as {\em implies\/} then
+the type of every combinator must be a propositional {\em tautology\/}
+because the rules of typing are isomorphic to the rules of logic (this is
+called the {\em Curry-Howard Isomorphism\/}).
+The following is a sample type derivation using the rules:
+$$
+\infer{\vdash \lambda x\lambda y.y~x : a \rightarrow (a\rightarrow b) \rightarrow b}
+      {\infer{x:a \vdash \lambda y:y~x : (a\rightarrow b) \rightarrow b}
+        {\infer{x:a, y:a\rightarrow b\vdash (y~x) : b}
+          {\infer{y:a\rightarrow b\vdash y:a\rightarrow b}{} &\quad
+            \infer{x:a \vdash x:a}{}}}}
+      $$
+      You can verify that the derived type is a tautology by constructing a truth
+      table.
+      
+An important consequence of introducing types is that beta-reduction
+(and alpha/eta conversion) must preserve the types of terms:
+{\flushleft\bf Theorem: Type Soundness.} {\em If $\vdash s:A$ is a valid type derivation
+  for lambda term $s$ and $s\Rightarrow_\beta t$, then $\vdash t:A$ is also a
+  valid type derivation.}
 
+  This core result (also referred to as {\em subject reduction\/}) is what we
+  mean by a computation being {\em type safe:\/} 
+  3+1 is an expression of type int, and 4, the normal form, is also an int.
+  So type checking can be done before, during, or after beta-reduction. If
+  it's done before reduction, it's called {\em static typing.\/}
+  
+Another consequence of enforcing typing rules is that certain terms,
+such as $\lambda x.(x~x)$, is not typable (does not have a type).  To
+encode a programming language that allows for recursion and
+repetition, the fixed pointer operator, with property $FIX~M = M~(FIX
+~M)$, must be imported as an extra constant.  If we are to give $FIX$
+a type, it would have to be $(a\rightarrow a)\rightarrow a$.  This is
+a {\em not a tautology,\/} so no pure lambda term can have this type.
 
 \end{document}
 \medskip
@@ -1126,14 +984,3 @@ binding to the variable $y_2$.  We see that $(f~4)$ reduces to
 $(\lambda y_2.y_2+4) ((\lambda y.(\lambda x.y+x)~2)~1) ~\Rightarrow~$
 $(\lambda y_2.y_2+4) ((\lambda y.y+2)~1) ~\Rightarrow~$
 $(\lambda y_2.y_2+4) (1+2) ~\Longrightarrow~ 7$.
-
-
-
-////////// outtakes
-There are some important items about the lambda calculus that I did
-not cover, including {\em ``eta-reduction:''\/} this rule just states
-that $A = \lambda x.A~x$.  For example, the term for Church
-mulitplication, $\lambda m\lambda n\lambda f\lambda x.m~(n~f)~x$, can
-also be written equivalently as ($\eta$-reduces to) $\lambda m\lambda
-n\lambda f.m~(n~f)$.  Most importantly, we did not cover {\em typed\/}
-lambda calculus.

@@ -58,11 +58,11 @@ calculus (this is part of what is called the {\em ``Church-Turing
   Thesis.''\/}) It explains the behaviors of most programs and
 languages even when they don't use lambda expressions explicitly.
 
-There are two versions of the lambda calculus: typed and untyped.  They
-roughly correspond to statically typed (compiler-based) and
+The lambda calculus has an untyped version and several typed versions.
+They roughly correspond to statically typed (compiler-based) and
 dynamically typed (interpreter-based) languages.  This document will
-first focus on the untyped lambda calculus.  Typed lambda calculi will be
-briefly covered at the end.
+first focus on the untyped lambda calculus.  Typed lambda calculi will
+be briefly covered at the end.
 
 \medskip
 
@@ -820,8 +820,8 @@ contents of these notes.
 
 Types are critically important in high level programming.  An expression
 such as \verb+"abc"/2.5+ it is considered nonsense because it does not
-{\em type check.\/}  Virtually all languages rely on some form of type
-information.  Even at the machine level, where all values are
+{\em type check.\/}  Virtually all languages rely on type information
+to some degree.  Even at the machine level, where all values are
 binary numbers, one can argue that types exist in the form of the sizes
 of data in bytes.  Certainly all higher level languages recognize types.
 In addition to rejecting nonsense,
@@ -916,7 +916,7 @@ would not be able to construct pairs containing different types of
 values such as nested pairs (the {\em car\/} and the {\em cdr\/} must be
 of the same type).
 
-Simply typed, and most other typed lambda calculus also contain the
+Simply typed, and many other typed lambda calculi also contain the
 following property:
 
 {\flushleft\bf Theorem: Strong Normalization.} {\em  There are no
@@ -933,13 +933,13 @@ $(a\rightarrow a)\rightarrow a$.  This is a {\em not a tautology,\/}
 so no pure lambda term can have this type.
 
 Thus, the simply typed lambda calculus is insufficient for creating a
-programming language.  A more elaborate type system is required, one with
-additional terms that allow us to define data structures and recursive
-programs.
+programming language.  A more elaborate type system is required, one
+with additional terms that allow us to define data structures and
+recursive programs.
 
 \subsection{Algebraic Types}
 
-We choose to present a type system close to what's used in many typed,
+We choose to present a type system close to that of many typed,
 functional programming languages.  In addition to $\rightarrow$, this
 type system allows several other {\em type constructors\/} including
 $*$ for cartesian product (pairs) and $|$ for disjoint union (sums).
@@ -949,7 +949,7 @@ These types constructors allow us to define data structures that are
 referred to as ``algebraic data types.''
 
 For example, the following is a possible type definition for binary trees
-containing integers:
+containing integers, using the syntax of $F^\sharp$:
 $$
   type ~Bintree ~=~ Nil~ |~ Node~ of~ int * Bintree * Bintree
 $$
@@ -964,6 +964,9 @@ $$Node(5,Node(2,Nil,Nil),Node(8,Nil,Nil))$$
 This is a tree with 5 at the root,
 2 to the left and 8 to the right.
 
+Algebraic types define precisely how data can be constructed as well as
+{\em deconstructed,\/} leading to a programming feature called {\em pattern
+  matching.\/}
 
 \subsection{Quantification over Types.}
 
@@ -985,12 +988,13 @@ is not a logically acceptable definition: A and B are not bound.
 \subsection{Subtyping}
 
 A term cannot have conflicting types: something can't be both a circle
-and a rectangle.  However, a circle is also a ``shape.''  This is called
-subtyping.  The typical notation is $A:B$ meaning that $A$ is a subtype of
-$B$.  Subtyping establishes a ``is-a'' relationship between types and their
-terms: a circle {\em is a} shape.  Subtyping is most typically found
-in object oriented programming languages.  Its benefits are debatable
-but that's a story for another day...
+and a rectangle.  However, a circle is also a ``shape.''  This is
+called subtyping.  The typical notation is $A:B$ meaning that $A$ is a
+subtype of $B$.  Subtyping establishes a ``is-a'' relationship between
+types and their terms: a circle {\em is a} shape.  Subtyping is most
+typically found as inheritance in object oriented programming
+languages.  Its benefits are debatable but that's a story for another
+day ...
 
 
 \newpage

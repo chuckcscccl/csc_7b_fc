@@ -19,7 +19,7 @@ use std::mem;
 //use std::collections::BTreeSet;   // for comparison
 
 /// Enum defining an AVL Tree as either an Empty tree or a Node.
-/// This avoids using `Option<Node<T>>` for the left/right subtrees.
+/// This avoids using `Option<Box<Node<T>>>` for the left/right subtrees.
 pub enum Bst<T> {
     Empty,
     Node(Box<Cell<T>>),
@@ -171,8 +171,8 @@ impl<T: Ord> Bst<T> {
     /// Inserts a new value v into the subtree, avoiding duplicates.
     /// The procedure returns true if insertion was successful (v is not a
     /// duplicate). Look at the source code:
-    /// this procedure is **recursive**, but with **zero-overhead** in the
-    /// sense that it is not less efficient than a non-recursive version
+    /// this procedure is **recursive**, but with minimal overhead in the
+    /// sense that it is not significantly less efficient than a non-recursive version
     /// (which is much more difficult to write).  To maintain a balanced
     /// tree, rotations must be applied after an insertion (or removal)
     /// as we "travel back up to the root."  This may suggest having a
@@ -259,7 +259,7 @@ impl<T: Ord> Bst<T> {
         answer
     } //delete
 
-    fn delmax(&mut self) -> T {
+    pub fn delmax(&mut self) -> T {
         // helper fn for delete, only call on non-empty
         if let Node(cell) = self {
             match &cell.right {
@@ -352,7 +352,8 @@ impl<T: Ord> Bst<T> {
                 if let Empty = &cell.right {
                     return ancestor;
                 } else {
-                    return cell.right.max_node();
+                    //return cell.right.max_node();
+		    return cell.right.min_node();
                 }
             }
         } //while

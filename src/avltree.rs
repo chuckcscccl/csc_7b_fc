@@ -259,6 +259,7 @@ impl<T: Ord> Bst<T> {
         answer
     } //delete
 
+    /// auxiliary procedure to delete
     pub fn delmax(&mut self) -> T {
         // helper fn for delete, only call on non-empty
         if let Node(cell) = self {

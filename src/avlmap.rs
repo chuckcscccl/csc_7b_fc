@@ -97,28 +97,17 @@ impl<KT: Ord + Eq, VT> AVLMap<KT, VT> {
         self.inner.len()
     }
 
-    /// dummy insert can't insert anything (because it's a dummy).
+    /// Some procedures are easy to define: just call the cooresponding
+    /// procedure for avlset:
     pub fn insert(&mut self, key: KT, val: VT) -> bool {
         self.inner.add(newpair(key, val))
-        //false
     }
 
     /// Write a procedure to return reference to value associated with
     /// the key, if it exists.  The supplied dummy procedure returns None.
-    /// This is harder because to you have to distinguish the key from the
-    /// value.
+    /// This is slightly harder because to you have to distinguish the 
+    /// key from the value.
     pub fn get(&self, key: &KT) -> Option<&VT> {
-        let mut current = &self.inner.root;
-        while let Node(cell) = current {
-            let item = &cell.item;
-            if key == &item.key {
-                return Some(&item.val);
-            } else if key < &item.key {
-                current = &cell.left;
-            } else {
-                current = &cell.right;
-            }
-        }
         None
     } //get
 
@@ -131,7 +120,7 @@ impl<KT: Ord + Eq, VT> AVLMap<KT, VT> {
 
     // add your code here.
 
-    /// **Optional problem:** complete the above function.  The result of this
+    /// Complete the `and_modify` function.  The result of this
     /// function should be that the map will contain the key (note that it's
     /// an owned key, not a reference) and the key is associated with the value
     /// returned by the supplied closure.  The closure is applied to either
@@ -139,9 +128,12 @@ impl<KT: Ord + Eq, VT> AVLMap<KT, VT> {
     /// the previous key-value pair, if it exists.  If you define this function
     /// correctly, then the [Self::insert] function can be implemented by
     /// calling `self.and_modify(key, |_|val).is_none()`.
+    ///
+    /// After you're done with this, don't forget to implement `iter`,
+    /// `successor` and `predecessor`.  Write `main` to demonstrate.
     pub fn and_modify<F>(&mut self, key: KT, modifier: F) -> Option<KVPair<KT, VT>>
     where
-        F: Fn(Option<&KVPair<KT, VT>>) -> VT,
+        F: FnOnce(Option<&KVPair<KT, VT>>) -> VT,
     {
         // write this function
         None

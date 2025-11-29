@@ -365,11 +365,15 @@ pub fn parse(tokens: &Vec<Expr>) -> Option<Expr> {
                 let b = Box::new(tos.remove(2));
                 let a = Box::new(tos.remove(0));
                 stack.push(Mod(a, b));
-            }
-            [cdr @ .., Sym('-'), e1] if prec(lookahead, 'u') => {
+            },
+            [cdr @ .., e2, Sym('-'), e1] if !proper(e2) && prec(lookahead, 'u') => {
                 let e = Neg(Box::new(stack.pop().unwrap()));
                 stack[sl - 2] = e; // e moved to stack
-            }
+            },
+            [Sym('-'), e1] if prec(lookahead, 'u') => {
+                let e = Neg(Box::new(stack.pop().unwrap()));
+                stack[sl - 2] = e; // e moved to stack
+            },
             _ if ti + 1 < tokens.len() => {
                 // shift
                 stack.push(lookahead.clone_token());
@@ -401,3 +405,4 @@ pub mod avlnavigator;
 pub mod eytzinger;
 
 pub mod redblack;
+

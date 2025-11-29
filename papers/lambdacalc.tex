@@ -201,7 +201,7 @@ are those that do not.  For example, in $\lambda x.(y~x~x)$, $x$ is bound and
 and $y$ is free.  Whether a variable is free or bound depends on the exact
 term in question: in the entire term $\lambda x.(x~y)$, $x$ is bound, but
 in the body $(x~y)$, $x$ is free.  The variable $x$ that forms a part of the
-binder $\lambda x$ can also be consider bound, but it's not part of the
+binder $\lambda x$ can also be considered bound, but it's not part of the
 body of the term (it declares that a variable is bound in the body).
 Consider the more interesting example:
 $$ \lambda x. y~ (\lambda x.x)~ x $$
@@ -870,7 +870,7 @@ called the {\em Curry-Howard Isomorphism\/}).
 The following is a sample type derivation using the rules:
 $$
 \infer{\vdash \lambda x\lambda y.y~x : a \rightarrow (a\rightarrow b) \rightarrow b}
-      {\infer{x:a \vdash \lambda y:y~x : (a\rightarrow b) \rightarrow b}
+      {\infer{x:a \vdash \lambda y.y~x : (a\rightarrow b) \rightarrow b}
         {\infer{x:a, y:a\rightarrow b\vdash (y~x) : b}
           {\infer{y:a\rightarrow b\vdash y:a\rightarrow b}{} &\quad
             \infer{x:a \vdash x:a}{}}}}

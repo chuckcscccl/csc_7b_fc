@@ -31,7 +31,7 @@ use Bst::*;
 /// do so to make your assignment easier.
 pub struct Cell<T> {
     pub item: T,
-    height: u8, // 2**255 nodes is a pretty big tree
+    pub height: u8, // 2**255 nodes is a pretty big tree
     pub left: Bst<T>,
     pub right: Bst<T>,
 }

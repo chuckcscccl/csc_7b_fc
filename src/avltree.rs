@@ -439,7 +439,7 @@ impl<T: Ord> AVLSet<T> {
 
     /// returns an in-order iterator over the set
     pub fn iter<'t>(&'t self) -> InorderIter<'t, T> {
-        InorderIter { cells: Vec::new() }
+        self.root.iter()
     }
 } // impl AVLSet
 

@@ -57,7 +57,8 @@ impl<T> CQ<T> {
 
   pub fn enqueue(&mut self, x:T) {
     if self.size>=self.q.len() { self.resize(); }
-    self.q[self.size] = Some(x);
+    let k = self.index(self.size);
+    self.q[k] = Some(x);
     self.size += 1;
   }//enqueue
 
@@ -288,7 +289,7 @@ impl<T:Ord> CQ<T> {
     let (mut min, mut max) = (0, self.size);
     while min < max {
       let mid = min + (max-min)/2;
-      match &self.q[mid] {
+      match &self.q[self.index(mid)] {
         Some(y) if y==x => { return Some(mid); },
 	Some(y) if x<y => { max = mid; },
 	Some(_) => { min = mid+1; },
@@ -301,20 +302,26 @@ impl<T:Ord> CQ<T> {
 
 
 fn main() {
-  let mut Q:CQ<i32> = CQ::new(512);
+  let mut Q:CQ<i32> = CQ::new(2);
   for x in [2,4,6,8,10,12,14,16] {Q.push(x);}
   for x in [1,3,5,79,11,13,15,17] {Q.enqueue(x);}
   Q.pop();
   Q.dequeue();
   Q[2] = Q[2] * Q[2];
   //Q.map(&mut |x|{print!("{} ",x);});  println!();
-  for x in Q.iter() { print!("{} ",x); }  println!();
+  //for x in Q.iter() { print!("{} ",x); }  println!();
+
 
   Q.insert(3,99);
   Q.insert(8,199);
   Q.remove(2);
 
+  
   for x in &mut Q { *x *= 10; }
-
+  for i in 0 .. Q.len() {
+    //print!("{} ",Q[i]);
+    Q[i] *= 10;
+  }
+  
   for x in /*Q.iter()*/ &Q { print!("{} ",x); }  println!();
 } //main

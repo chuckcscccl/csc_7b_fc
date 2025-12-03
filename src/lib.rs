@@ -406,3 +406,4 @@ pub mod eytzinger;
 
 pub mod redblack;
 
+pub mod twoway;

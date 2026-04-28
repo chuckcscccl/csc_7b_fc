@@ -407,3 +407,6 @@ pub mod eytzinger;
 pub mod redblack;
 
 pub mod twoway;
+
+pub mod hmap;
+pub mod bimap;

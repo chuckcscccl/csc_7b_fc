@@ -19,8 +19,8 @@ use std::hash::{BuildHasher,Hash,Hasher};
 
 //////////////Bimap
 pub struct Bimap<TA,TB> {
-  forward : Hmap<TA,usize>,
-  backward: Hmap<TB,usize>,
+  pub forward : Hmap<TA,usize>,
+  pub backward: Hmap<TB,usize>,
 }
 impl<TA:Hash+Eq, TB:Hash+Eq> Bimap<TA,TB> {
 

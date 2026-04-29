@@ -101,7 +101,7 @@ impl<TA:Hash+Eq, TB:Hash+Eq> Bimap<TA,TB> {
 
 
 /// Function thesting the implementation - run when finished
-fn test() {
+pub fn test() {
   let mut days = Bimap::new();
   days.set("Monday",1);
   days.set("Tuesday",2);

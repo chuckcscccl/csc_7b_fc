@@ -1,4 +1,4 @@
-//!  CSC 123/252 Assignment
+//!  **CSC 123/252 Assignment**
 //!
 //!  This module contains the skeleton of a bijective hashmap that you should
 //!  implement fully.  It is based on the implementation of my version of

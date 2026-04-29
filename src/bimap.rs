@@ -11,7 +11,7 @@
 //!  [Bimap] structure link to see the functions you need to implement.
 //!
 //!  As a challenge, try to also implement an iterator for your structure.
-//!  Try to use the iterator for [crate::hmap::Hmap].
+//!  Try to use the iterator for [Hmap].
 
 #![allow(dead_code, unused_imports, unused_variables)]
 

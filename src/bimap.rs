@@ -5,9 +5,9 @@
 //!  one-way hashmaps found in [crate::hmap].  Consult the documentation
 //!  and source code of [crate::hmap::Hmap] to understand it before proceeding.
 //!  The idea is to use two Hmaps underneath, each mapping a key to the index
-//!  in the other map where the corresponding value is stored.  This way a
-//!  bijective hashmap can be constructed without resorting to Copy, Clone,
-//!  Rc, or anything unsafe.
+//!  in the other map's underlying vector where the corresponding value is
+//!  stored.  This way a bijective hashmap can be constructed without
+//!  resorting to Copy, Clone, Rc, or anything unsafe.
 //!
 //!  As a challenge, try to also implement an iterator for your structure.
 //!  Try to use the iterator for [crate::hmap::Hmap].

@@ -78,7 +78,7 @@ impl<TA:Hash+Eq, TB:Hash+Eq> Bimap<TA,TB> {
 
   /// Complete the implementation of this function.  The general approach is
   /// the following.  First, call [Bimap::remove_forward] and [Bimap::remove_backward] to
-  /// clear existing values.  Then call [crate::hmap::Hmap::find_new_slot]
+  /// clear existing values.  Then call [Hmap::find_new_slot]
   /// to find appropriate places to place the key and values in the forward
   /// and backward maps.  Then place in the forward map `Some((key,vi))`
   /// where vi is the index in the backward map where the value
